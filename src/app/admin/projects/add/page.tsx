@@ -1,4 +1,3 @@
-// File: app/admin/projects/add/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +10,8 @@ export default function AddProjectPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    status: 'On Process',
+    location: '',
+    status: 'Ongoing',
     image: '',
   });
 
@@ -24,6 +24,7 @@ export default function AddProjectPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setFormData((prev) => ({ ...prev, image: reader.result as string }));
@@ -31,9 +32,24 @@ export default function AddProjectPage() {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = () => {
-    localStorage.setItem('newProject', JSON.stringify(formData));
-    router.push('/admin/projects');
+  const handleSubmit = async () => {
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to add project');
+      }
+
+      router.push('/admin/projects');
+    } catch (error) {
+      alert(`Error adding project: ${error.message}`);
+      console.error(error);
+    }
   };
 
   return (
@@ -69,6 +85,13 @@ export default function AddProjectPage() {
         onChange={handleChange}
         className="w-full mb-2 border px-3 py-2 rounded"
       />
+      <input
+        name="location"
+        placeholder="Location"
+        value={formData.location}
+        onChange={handleChange}
+        className="w-full mb-2 border px-3 py-2 rounded"
+      />
       <textarea
         name="description"
         placeholder="Description"
@@ -83,8 +106,9 @@ export default function AddProjectPage() {
         onChange={handleChange}
         className="w-full mb-4 border px-3 py-2 rounded"
       >
-        <option value="On Process">On Process</option>
+        <option value="Ongoing">Ongoing</option>
         <option value="Completed">Completed</option>
+        <option value="Featured">Featured</option>
       </select>
 
       <button

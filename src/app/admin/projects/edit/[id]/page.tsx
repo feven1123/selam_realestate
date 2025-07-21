@@ -4,41 +4,37 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 
-const initialProjects = [
-  {
-    id: 1,
-    title: 'Modern Villa in Bole',
-    description: 'A beautiful modern villa located in the heart of Bole.',
-    image: '/1.jpeg',
-    status: 'On Process',
-  },
-  {
-    id: 2,
-    title: 'Luxury Apartments in Ayat',
-    description: 'Spacious and elegant apartments with great amenities.',
-    image: '/1.jpeg',
-    status: 'Completed',
-  },
-];
-
 export default function EditProjectPage() {
   const { id } = useParams();
   const router = useRouter();
+
   const [formData, setFormData] = useState({
+    id: Number(id),
     title: '',
     description: '',
+    location: '',
     status: 'On Process',
     image: '',
   });
 
   useEffect(() => {
-    const project = initialProjects.find((p) => p.id === Number(id));
-    if (project) {
-      setFormData(project);
+    // Fetch project data by id from API
+    async function fetchProject() {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        const project = data.find((p: any) => p.id === Number(id));
+        if (project) setFormData(project);
+      } catch (error) {
+        console.error('Failed to fetch project', error);
+      }
     }
+    fetchProject();
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -52,9 +48,19 @@ export default function EditProjectPage() {
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
-    console.log('Project Updated:', formData);
-    router.push('/admin/projects');
+  const handleSave = async () => {
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error('Failed to update project');
+      router.push('/admin/projects');
+    } catch (error) {
+      alert('Error updating project');
+      console.error(error);
+    }
   };
 
   return (
@@ -76,13 +82,24 @@ export default function EditProjectPage() {
         className="hidden"
       />
       {formData.image && (
-        <img src={formData.image} alt="Preview" className="w-full h-48 object-cover rounded mb-4" />
+        <img
+          src={formData.image}
+          alt="Preview"
+          className="w-full h-48 object-cover rounded mb-4"
+        />
       )}
 
       <input
         name="title"
         placeholder="Title"
         value={formData.title}
+        onChange={handleChange}
+        className="w-full mb-2 border px-3 py-2 rounded"
+      />
+      <input
+        name="location"
+        placeholder="Location"
+        value={formData.location}
         onChange={handleChange}
         className="w-full mb-2 border px-3 py-2 rounded"
       />

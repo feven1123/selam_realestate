@@ -1,72 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const allProjects = [
-  {
-    id: 'addis-luxury-apartments',
-    title: 'Addis Ababa Luxury Apartments',
-    type: 'featured',
-    location: 'Addis Ababa',
-    image: '/images/project1.jpg',
-    status: 'Available',
-  },
-  {
-    id: 'mekelle-villas-phase-1',
-    title: 'Mekelle Villas Phase I',
-    type: 'completed',
-    location: 'Mekelle',
-    image: '/images/project2.jpg',
-    status: 'Sold Out',
-  },
-  {
-    id: 'hawassa-city-homes',
-    title: 'Hawassa City Homes',
-    type: 'ongoing',
-    location: 'Hawassa',
-    image: '/images/project3.jpg',
-    status: 'Under Construction',
-  },
-  {
-    id: 'bahir-dar-family-homes',
-    title: 'Bahir Dar Family Homes',
-    type: 'featured',
-    location: 'Bahir Dar',
-    image: '/images/project4.jpg',
-    status: 'Booking Open',
-  },
-  {
-    id: 'gondar-condominiums',
-    title: 'Gondar Condominiums',
-    type: 'completed',
-    location: 'Gondar',
-    image: '/images/project5.jpg',
-    status: 'Delivered',
-  },
-  {
-    id: 'dire-dawa-apartments',
-    title: 'Dire Dawa Apartments',
-    type: 'ongoing',
-    location: 'Dire Dawa',
-    image: '/images/project6.jpg',
-    status: 'In Progress',
-  },
-];
-
 export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'ongoing' | 'completed' | 'featured'>('all');
+  const [projects, setProjects] = useState([]);
 
-  const filteredProjects = allProjects.filter((project) => {
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        setProjects(data);
+      } catch (error) {
+        console.error('Error loading projects:', error);
+      }
+    }
+
+    fetchProjects();
+  }, []);
+
+  const filteredProjects = projects.filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(search.toLowerCase()) ||
       project.location.toLowerCase().includes(search.toLowerCase());
 
-    const matchesFilter = filter === 'all' || project.type === filter;
+      const matchesFilter =
+      filter === 'all' ||
+      (filter === 'ongoing' && project.status === 'On Process') ||
+      (filter === 'completed' && project.status === 'Completed') ||
+      (filter === 'featured' && (project.featured === true || project.featured === 'true'));
+    
 
     return matchesSearch && matchesFilter;
   });
@@ -112,14 +81,14 @@ export default function ProjectsPage() {
 
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project: any) => (
               <div
                 key={project.id}
                 className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
               >
                 <div className="relative w-full h-56 mb-4">
                   <Image
-                    src={project.image}
+                    src={project.imageUrl || '/images/placeholder.jpg'}
                     alt={project.title}
                     layout="fill"
                     objectFit="cover"
@@ -150,6 +119,10 @@ export default function ProjectsPage() {
               </div>
             ))}
           </div>
+
+          {filteredProjects.length === 0 && (
+            <div className="text-center text-gray-500 mt-10">No projects found.</div>
+          )}
         </section>
       </main>
 
