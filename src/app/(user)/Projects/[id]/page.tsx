@@ -74,7 +74,7 @@ export default function ProjectDetailPage() {
           <input
             type="hidden"
             name="_next"
-            value="https://yourwebsite.com/thank-you"
+            value="http://localhost:3000/Projects"
           />
 
           <input

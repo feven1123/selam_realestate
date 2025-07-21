@@ -47,27 +47,44 @@ export default function ContactPage() {
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">Send a Message</h2>
-            <form className="space-y-6">
+            <form
+              action="https://formsubmit.co/favumail20@gmail.com"
+              method="POST"
+              className="space-y-6"
+            >
+              {/* Optional: Customize email subject */}
+              <input type="hidden" name="_subject" value="New Contact Form Submission" />
+              {/* Redirect to your site or thank you page */}
+              <input type="hidden" name="_next" value="http://localhost:3000/" />
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input
                   type="text"
+                  name="name"
                   placeholder="Your Name"
+                  required
                   className="border rounded px-4 py-3 w-full focus:outline-none focus:ring focus:border-primary"
                 />
                 <input
                   type="email"
+                  name="email"
                   placeholder="Your Email"
+                  required
                   className="border rounded px-4 py-3 w-full focus:outline-none focus:ring focus:border-primary"
                 />
               </div>
               <input
                 type="text"
+                name="subject"
                 placeholder="Subject"
+                required
                 className="border rounded px-4 py-3 w-full focus:outline-none focus:ring focus:border-primary"
               />
               <textarea
+                name="message"
                 rows={5}
                 placeholder="Your Message"
+                required
                 className="border rounded px-4 py-3 w-full focus:outline-none focus:ring focus:border-primary"
               />
               <button
