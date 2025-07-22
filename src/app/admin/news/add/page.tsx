@@ -14,7 +14,9 @@ export default function AddNewsPage() {
     image: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -29,16 +31,30 @@ export default function AddNewsPage() {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = () => {
-    console.log('News Submitted:', formData);
-    router.push('/admin/news');
+  const handleSubmit = async () => {
+    try {
+      const res = await fetch('/api/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to add news');
+      }
+
+      router.push('/admin/news');
+    } catch (error) {
+      alert(`Error adding news: ${(error as Error).message}`);
+      console.error(error);
+    }
   };
 
   return (
     <div className="p-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Add News</h1>
 
-      {/* Image Upload Button */}
       <label
         htmlFor="image"
         className="cursor-pointer inline-flex items-center px-4 py-2 border border-dashed border-gray-400 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition mb-2"
@@ -54,9 +70,12 @@ export default function AddNewsPage() {
         className="hidden"
       />
 
-      {/* Preview */}
-      {formData.image && (
-        <img src={formData.image} alt="Preview" className="w-full h-40 object-cover rounded mb-4" />
+{formData.image && (
+        <img
+          src={formData.image}
+          alt="Preview"
+          className="w-full h-48 object-cover rounded mb-4"
+        />
       )}
 
       <input

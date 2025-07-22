@@ -1,43 +1,54 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Trash2 } from 'lucide-react'; // Optional: install lucide-react for icons
+import { Trash2 } from 'lucide-react';
 
 interface NewsItem {
   id: number;
   title: string;
-  date: string;
-  summary: string;
+  content: string;
+  image?: string;
+  publishedAt: string;
 }
 
-const initialNews: NewsItem[] = [
-  {
-    id: 1,
-    title: "New Housing Project Launched",
-    date: "2025-07-08",
-    summary: "We have launched a new housing project in Addis Ababa with modern amenities.",
-  },
-  {
-    id: 2,
-    title: "Market Trends for 2025",
-    date: "2025-07-01",
-    summary: "An overview of the current real estate market trends and what to expect.",
-  },
-  {
-    id: 3,
-    title: "How to Secure a Mortgage",
-    date: "2025-06-25",
-    summary: "Tips and guidelines on securing a mortgage loan easily and safely.",
-  },
-];
-
 export default function NewsAdminPage() {
-  const [news, setNews] = useState(initialNews);
+  const [news, setNews] = useState<NewsItem[]>([]);
   const router = useRouter();
 
-  const deleteNews = (id: number) => {
-    setNews((prev) => prev.filter((item) => item.id !== id));
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const res = await fetch('/api/news');
+        if (!res.ok) throw new Error('Failed to fetch news');
+        const data = await res.json();
+        setNews(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchNews();
+  }, []);
+
+  const deleteNews = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this news?')) return;
+
+    try {
+      const res = await fetch(`/api/news?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to delete news');
+      }
+
+      setNews((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      alert(`Error deleting news: ${(error as Error).message}`);
+      console.error(error);
+    }
   };
 
   return (
@@ -53,20 +64,24 @@ export default function NewsAdminPage() {
       </div>
 
       <div className="space-y-6">
-        {news.slice(0, 3).map((item) => (
+        {news.length === 0 && <p>No news found.</p>}
+
+        {news.map((item) => (
           <div
             key={item.id}
             className="border rounded p-4 bg-white shadow flex flex-col md:flex-row md:space-x-6 relative"
           >
-            <img
-              src="/1.jpeg"
-              alt="News Image"
-              className="w-full md:w-48 h-28 object-cover rounded mb-4 md:mb-0"
-            />
+            {item.image && (
+              <img
+                src={item.image}
+                alt={item.title}
+                className="w-full md:w-48 h-28 object-cover rounded mb-4 md:mb-0"
+              />
+            )}
             <div className="flex-1">
               <h2 className="text-xl font-semibold">{item.title}</h2>
-              <p className="text-sm text-gray-500 mb-2">{item.date}</p>
-              <p className="mb-4">{item.summary}</p>
+              <p className="text-sm text-gray-500 mb-2">{new Date(item.publishedAt).toLocaleDateString()}</p>
+              <p className="mb-4">{item.content}</p>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => router.push(`/admin/news/edit/${item.id}`)}
@@ -74,8 +89,13 @@ export default function NewsAdminPage() {
                 >
                   Edit
                 </button>
-                <button onClick={() => deleteNews(item.id)} title="Delete">
-                  <Trash2 className="w-5 h-5 text-red-500 hover:text-red-700 transition" />
+                <button
+                  onClick={() => deleteNews(item.id)}
+                  title="Delete"
+                  className="text-red-600 hover:underline flex items-center"
+                >
+                  <Trash2 className="w-5 h-5 mr-1" />
+                  Delete
                 </button>
               </div>
             </div>

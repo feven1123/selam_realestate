@@ -33,7 +33,7 @@ model News {
   id          Int      @id @default(autoincrement())
   title       String
   content     String
-  imageUrl    String?
+  image       String
   publishedAt DateTime @default(now())
 }
 

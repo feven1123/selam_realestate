@@ -4,30 +4,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 
-const initialNews = [
-  {
-    id: 1,
-    title: 'New Housing Project Launched',
-    date: '2025-07-08',
-    summary: 'We have launched a new housing project...',
-    image: '/1.jpeg',
-  },
-  {
-    id: 2,
-    title: 'Market Trends for 2025',
-    date: '2025-07-01',
-    summary: 'An overview of the current market...',
-    image: '/1.jpeg',
-  },
-  {
-    id: 3,
-    title: 'How to Secure a Mortgage',
-    date: '2025-06-25',
-    summary: 'Tips and guidelines for a mortgage...',
-    image: '/1.jpeg',
-  },
-];
-
 export default function EditNewsPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -39,11 +15,26 @@ export default function EditNewsPage() {
     image: '',
   });
 
+  // Fetch existing news data by ID
   useEffect(() => {
-    const newsItem = initialNews.find((item) => item.id === Number(id));
-    if (newsItem) {
-      setFormData(newsItem);
+    async function fetchNews() {
+      try {
+        const res = await fetch(`/api/news/${id}`);
+        if (!res.ok) throw new Error('Failed to fetch news item');
+        const data = await res.json();
+
+        setFormData({
+          title: data.title,
+          date: data.publishedAt.slice(0, 10),
+          summary: data.content,
+          image: data.imageUrl || '',
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
+
+    if (id) fetchNews();
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -61,9 +52,30 @@ export default function EditNewsPage() {
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
-    console.log('News Updated:', formData);
-    router.push('/admin/news');
+  const handleSave = async () => {
+    try {
+      const res = await fetch('/api/news', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: Number(id),
+          title: formData.title,
+          content: formData.summary,
+          imageUrl: formData.image,
+          publishedAt: formData.date,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to update news');
+      }
+
+      router.push('/admin/news');
+    } catch (error) {
+      alert(`Error updating news: ${(error as Error).message}`);
+      console.error(error);
+    }
   };
 
   return (
