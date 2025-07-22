@@ -34,10 +34,24 @@ export default function ProjectsAdminPage() {
     fetchProjects();
   }, []);
 
-  const handleDelete = (id: string) => {
-    setProjects((prev) => prev.filter((p) => p.id !== id));
-    // TODO: send DELETE to API later
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await fetch(`/api/projects?id=${id}`, {
+        method: 'DELETE',
+      });
+  
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to delete project');
+      }
+  
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+      alert('Failed to delete project: ' + error.message);
+    }
   };
+  
 
   return (
     <div className="p-6">

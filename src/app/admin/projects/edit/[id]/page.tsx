@@ -13,7 +13,7 @@ export default function EditProjectPage() {
     title: '',
     description: '',
     location: '',
-    status: 'On Process',
+    status: 'Ongoing',
     image: '',
   });
 
@@ -117,8 +117,9 @@ export default function EditProjectPage() {
         onChange={handleChange}
         className="w-full mb-4 border px-3 py-2 rounded"
       >
-        <option value="On Process">On Process</option>
+       <option value="Ongoing">Ongoing</option>
         <option value="Completed">Completed</option>
+        <option value="Featured">Featured</option>
       </select>
 
       <button
@@ -128,5 +129,5 @@ export default function EditProjectPage() {
         Save Changes
       </button>
     </div>
-  );
+  ); 
 }
