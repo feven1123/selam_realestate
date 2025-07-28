@@ -9,13 +9,33 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Replace with real auth logic
-    if (email && password) {
-      router.push('/admin/dashboard');
-    } else {
+
+    if (!email || !password) {
       alert('Please enter both email and password.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || 'Login failed.');
+        return;
+      }
+
+      // Login successful
+      router.push('/admin/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Something went wrong. Please try again.');
     }
   };
 
@@ -47,13 +67,7 @@ export default function LoginPage() {
         </button>
       </form>
 
-      {/* Register Link */}
-      <p className="text-center text-sm text-gray-600 mt-4">
-        Don&apos;t have an account?{' '}
-        <Link href="/admin/auth/register" className="text-blue-600 hover:underline">
-          Register
-        </Link>
-      </p>
+    
     </div>
   );
 }

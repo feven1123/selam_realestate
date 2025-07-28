@@ -37,22 +37,6 @@ model News {
   publishedAt DateTime @default(now())
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String?
-  createdAt DateTime @default(now())
-  requests  Request[]
-}
 
-model Request {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  phone     String
-  message   String
-  createdAt DateTime @default(now())
-}
 
 

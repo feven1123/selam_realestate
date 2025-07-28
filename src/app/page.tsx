@@ -17,10 +17,9 @@ export default function Home() {
 <Banner />
 <How />
 <Why/>
-<Feature />
+
 <Came />
-<Completed />
-<Ongoing />
+
 <Sister />
 <Footer />
  </div>
