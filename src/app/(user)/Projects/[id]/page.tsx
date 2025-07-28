@@ -8,14 +8,14 @@ import Image from 'next/image';
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
-  const [project, setProject] = useState<Property>(null);
+  const [project, setProject] = useState<any>(null);
 
   useEffect(() => {
     async function fetchProject() {
       try {
         const res = await fetch('/api/projects');
         const data = await res.json();
-        const foundProject = data.find((p: Property) => p.id === Number(id));
+        const foundProject = data.find((p: any) => p.id === Number(id));
         setProject(foundProject || null);
       } catch (err) {
         console.error(err);

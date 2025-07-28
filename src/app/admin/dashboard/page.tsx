@@ -19,9 +19,9 @@ export default function DashboardPage() {
         const data = await res.json();
 
         const total = data.length;
-        const completed = data.filter((p: Property) => p.status === 'Completed').length;
-        const ongoing = data.filter((p: Property) => p.status === 'On Process').length;
-        const featured = data.filter((p: Property) => p.isFeatured).length;
+        const completed = data.filter((p: any) => p.status === 'Completed').length;
+        const ongoing = data.filter((p: any) => p.status === 'On Process').length;
+        const featured = data.filter((p: any) => p.isFeatured).length;
 
         setStats([
           { title: "Total Properties", value: total },
