@@ -23,7 +23,7 @@ export default function EditProjectPage() {
       try {
         const res = await fetch('/api/projects');
         const data = await res.json();
-        const project = data.find((p: any) => p.id === Number(id));
+        const project = data.find((p: Property) => p.id === Number(id));
         if (project) setFormData(project);
       } catch (error) {
         console.error('Failed to fetch project', error);
