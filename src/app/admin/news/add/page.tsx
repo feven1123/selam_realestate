@@ -36,20 +36,26 @@ export default function AddNewsPage() {
       const res = await fetch('/api/news', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          title: formData.title,
+          content: formData.summary,
+          image: formData.image,
+          publishedAt: formData.date,
+        }),
       });
-
+  
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || 'Failed to add news');
       }
-
+  
       router.push('/admin/news');
     } catch (error) {
       alert(`Error adding news: ${(error as Error).message}`);
       console.error(error);
     }
   };
+  
 
   return (
     <div className="p-6 max-w-xl mx-auto">
@@ -96,7 +102,7 @@ export default function AddNewsPage() {
         name="summary"
         value={formData.summary}
         onChange={handleChange}
-        placeholder="Summary"
+        placeholder="summary"
         rows={5}
         className="w-full mb-4 border px-3 py-2 rounded"
       />
