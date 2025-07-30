@@ -25,7 +25,7 @@ export default function AboutPage() {
             Selam Realestate is a trusted real estate development company in Ethiopia,
             focused on building high-quality residential and commercial properties that stand
             the test of time. Our projects are designed with modern living in mind, combining
-            style, functionality, and accessibility. Whether it&apos;s affordable housing, luxury
+            style, functionality, and accessibility. Whether it&#39;s affordable housing, luxury
             villas, or commercial buildings — we aim to create communities that empower lives.
           </p>
         </div>
