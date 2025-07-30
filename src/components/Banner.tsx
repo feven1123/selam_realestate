@@ -28,7 +28,7 @@ export default function HeroSearch() {
         backgroundImage: "url('/images/1.jpeg')",
       }}
     >
-      <div className="relative z-10 text-center px-4 w-full max-w-5xl">
+      <div className="relative z-10 text-center px-4 w-full max-w-5xl ">
         <h1 className="text-3xl md:text-4xl font-bold text- mb-3">
           Find Your Dream Home
         </h1>
