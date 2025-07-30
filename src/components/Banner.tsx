@@ -25,14 +25,14 @@ export default function HeroSearch() {
     <section
       className="relative h-[400px] bg-cover bg-center flex items-center justify-center"
       style={{
-        backgroundImage: "url('/images/1.jpeg')",
+        backgroundImage: "url('/images/6.jpeg')",
       }}
     >
-      <div className="relative z-10 text-center px-4 w-full max-w-5xl ">
-        <h1 className="text-3xl md:text-4xl font-bold text- mb-3">
+      <div className="relative z-10 text-center px-4 w-full max-w-5xl">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
           Find Your Dream Home
         </h1>
-        <p className="text-sm md:text-base text-black-200 mb-6">
+        <p className="text-sm md:text-base text-white mb-6">
           Search from the best properties available in Ethiopia.
         </p>
 
