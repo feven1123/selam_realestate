@@ -30,20 +30,14 @@ const adminLinks: NavLink[] = [
 export default function Header() {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+ 
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsAdmin(pathname.startsWith('/admin'));
   }, [pathname]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
 
   const links = isAdmin ? adminLinks : publicLinks;
 
