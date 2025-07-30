@@ -1,12 +1,10 @@
-// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model Admin {
@@ -23,20 +21,15 @@ model Property {
   description String
   location    String
   status      String
-  image       String
   createdAt   DateTime @default(now())
+  image       String
   updatedAt   DateTime @updatedAt
 }
-
 
 model News {
   id          Int      @id @default(autoincrement())
   title       String
   content     String
-  image       String
   publishedAt DateTime @default(now())
+  image       String   @default("default-image.jpg")
 }
-
-
-
-
