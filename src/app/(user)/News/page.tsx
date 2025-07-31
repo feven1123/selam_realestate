@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
+import Topbar from '@/components/TopBar'; 
 
 type NewsItem = {
   id: string;
@@ -34,6 +35,8 @@ export default function NewsPage() {
 
   return (
     <>
+    <Topbar />
+
       <Header />
 
       <main className="pt-20 bg-white">

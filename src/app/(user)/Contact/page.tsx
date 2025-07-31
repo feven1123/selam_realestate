@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
+import Topbar from '@/components/TopBar'; 
 const faqs = [
   {
     question: "How can I book a property?",
@@ -32,6 +32,7 @@ export default function ContactPage() {
 
   return (
     <>
+     <Topbar />
       <Header />
 
       <main className="pt-20 bg-white">

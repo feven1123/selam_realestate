@@ -3,10 +3,12 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
-
+import Topbar from '@/components/TopBar';
 export default function AboutPage() {
   return (
     <>
+    <Topbar />
+
     <Header />
     <main className="min-h-screen bg-white">
       {/* Intro Section */}

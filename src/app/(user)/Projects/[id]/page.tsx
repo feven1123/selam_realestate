@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
-
+import Topbar from '@/components/TopBar'; 
 interface Project {
   id: number;
   title: string;
@@ -39,7 +39,8 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <>
-        <Header />
+            <Topbar />
+            <Header />
         <main className="min-h-screen pt-28 text-center">
           <h1 className="text-2xl text-gray-600">Project not found.</h1>
         </main>

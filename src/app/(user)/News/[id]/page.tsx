@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
-
+import Topbar from '@/components/TopBar';
 type NewsItem = {
   id: number;
   title: string;
@@ -47,6 +47,8 @@ export default function NewsDetailPage() {
 
   return (
     <>
+    <Topbar />
+
       <Header />
       <main className="pt-20 bg-white">
         <section className="bg-[#B0B8C1] text-white py-20 text-center px-4">

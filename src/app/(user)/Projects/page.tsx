@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import Topbar from '@/components/TopBar';
 interface Project {
   id: number;
   title: string;
@@ -53,6 +53,7 @@ export default function ProjectsPage() {
 
   return (
     <>
+    <Topbar />
       <Header />
 
       <main className="pt-20 bg-white">
