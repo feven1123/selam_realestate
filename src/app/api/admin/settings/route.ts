@@ -24,7 +24,8 @@ export async function PUT(req: Request) {
     }
 
     // Prepare data to update
-    let updatedData: any = { email };
+
+    const updatedData: { email: string; password?: string } = { email };
 
     if (newPassword && newPassword.trim() !== '') {
       const hashedNewPassword = await bcrypt.hash(newPassword, 10);
