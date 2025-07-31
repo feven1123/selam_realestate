@@ -6,10 +6,22 @@ import Footer from '@/components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
 
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  status: string;
+  createdAt: string; // could also be Date if converted
+  image: string;
+  updatedAt: string;
+  isFeatured?: boolean;
+}
+
 export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'ongoing' | 'completed' | 'featured'>('all');
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -30,12 +42,11 @@ export default function ProjectsPage() {
       project.title.toLowerCase().includes(search.toLowerCase()) ||
       project.location.toLowerCase().includes(search.toLowerCase());
 
-      const matchesFilter =
+    const matchesFilter =
       filter === 'all' ||
       (filter === 'ongoing' && project.status === 'On Process') ||
       (filter === 'completed' && project.status === 'Completed') ||
-      (filter === 'featured' && (project.featured === true || project.featured === 'true'));
-    
+      (filter === 'featured' && project.isFeatured === true);
 
     return matchesSearch && matchesFilter;
   });
@@ -65,7 +76,7 @@ export default function ProjectsPage() {
               {['all', 'ongoing', 'completed', 'featured'].map((type) => (
                 <button
                   key={type}
-                  onClick={() => setFilter(type as any)}
+                  onClick={() => setFilter(type as 'all' | 'ongoing' | 'completed' | 'featured')}
                   className={`px-4 py-2 rounded border font-medium ${
                     filter === type
                       ? 'bg-[#B0B8C1] text-white border-[#B0B8C1]'
@@ -81,27 +92,33 @@ export default function ProjectsPage() {
 
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filteredProjects.map((project: any) => (
+            {filteredProjects.map((project) => (
               <div
                 key={project.id}
                 className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
               >
-                <div className="relative w-full h-56 mb-4">
-                  <Image
-                    src={project.imageUrl || '/images/placeholder.jpg'}
-                    alt={project.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
+   <div className="relative w-full h-56 mb-4 rounded-md overflow-hidden">
+   <Image
+  src={
+    project.image && project.image.trim() !== ''
+      ? `/uploads/${project.image}`
+      : '/images/placeholder.jpg'
+  }
+  alt={project.title}
+  fill
+  className="object-cover"
+/>
+
+</div>
+
+
                 <h3 className="text-xl font-semibold text-gray-800 mb-1">{project.title}</h3>
                 <p className="text-sm text-gray-500">{project.location}</p>
                 <p
                   className={`text-sm font-medium mt-2 ${
-                    project.type === 'completed'
+                    project.status === 'Completed'
                       ? 'text-green-600'
-                      : project.type === 'ongoing'
+                      : project.status === 'On Process'
                       ? 'text-orange-500'
                       : 'text-blue-600'
                   }`}

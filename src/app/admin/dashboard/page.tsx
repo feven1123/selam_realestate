@@ -4,6 +4,18 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
+type Property = {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  status: string; // e.g. 'Completed', 'On Process'
+  createdAt: string;
+  updatedAt: string;
+  image: string;
+  isFeatured?: boolean; // if you are using this field on frontend, even if not in schema
+};
+
 export default function DashboardPage() {
   const [stats, setStats] = useState([
     { title: "Total Properties", value: 0 },
@@ -16,12 +28,12 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         const res = await fetch('/api/projects');
-        const data = await res.json();
+        const data: Property[] = await res.json();
 
         const total = data.length;
-        const completed = data.filter((p: any) => p.status === 'Completed').length;
-        const ongoing = data.filter((p: any) => p.status === 'On Process').length;
-        const featured = data.filter((p: any) => p.isFeatured).length;
+        const completed = data.filter((p) => p.status === 'Completed').length;
+        const ongoing = data.filter((p) => p.status === 'On Process').length;
+        const featured = data.filter((p) => p.isFeatured).length;
 
         setStats([
           { title: "Total Properties", value: total },

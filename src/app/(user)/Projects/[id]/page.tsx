@@ -6,16 +6,28 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  image?: string;
+
+}
+
 export default function ProjectDetailPage() {
   const { id } = useParams();
-  const [project, setProject] = useState<any>(null);
+  const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
     async function fetchProject() {
       try {
         const res = await fetch('/api/projects');
-        const data = await res.json();
-        const foundProject = data.find((p: any) => p.id === Number(id));
+        const data: Project[] = await res.json();
+        const foundProject = data.find((p) => p.id === Number(id));
         setProject(foundProject || null);
       } catch (err) {
         console.error(err);
@@ -43,7 +55,7 @@ export default function ProjectDetailPage() {
         {/* Project Image */}
         <div className="relative w-full h-64 rounded overflow-hidden shadow mb-6">
           <Image
-            src={project.imageUrl || project.image || '/images/placeholder.jpg'}
+            src={ project.image || '/images/placeholder.jpg'}
             alt={project.title}
             layout="fill"
             objectFit="cover"

@@ -4,11 +4,21 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 
+// Define the type for a project
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  status: 'Ongoing' | 'Completed' | 'Featured';
+  image: string;
+}
+
 export default function EditProjectPage() {
   const { id } = useParams();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Project>({
     id: Number(id),
     title: '',
     description: '',
@@ -18,12 +28,11 @@ export default function EditProjectPage() {
   });
 
   useEffect(() => {
-    // Fetch project data by id from API
     async function fetchProject() {
       try {
         const res = await fetch('/api/projects');
-        const data = await res.json();
-        const project = data.find((p: any) => p.id === Number(id));
+        const data: Project[] = await res.json();
+        const project = data.find((p) => p.id === Number(id));
         if (project) setFormData(project);
       } catch (error) {
         console.error('Failed to fetch project', error);
@@ -117,7 +126,7 @@ export default function EditProjectPage() {
         onChange={handleChange}
         className="w-full mb-4 border px-3 py-2 rounded"
       >
-       <option value="Ongoing">Ongoing</option>
+        <option value="Ongoing">Ongoing</option>
         <option value="Completed">Completed</option>
         <option value="Featured">Featured</option>
       </select>
@@ -129,5 +138,5 @@ export default function EditProjectPage() {
         Save Changes
       </button>
     </div>
-  ); 
+  );
 }
