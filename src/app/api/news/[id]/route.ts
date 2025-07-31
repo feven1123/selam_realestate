@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import type { NextApiRequestContext } from 'next/dist/shared/lib/app-router-types'; // ✅ valid context type
 
-export async function GET(
-  req: NextRequest,
-  context: NextApiRequestContext
-) {
+export async function GET(req: NextRequest) {
   try {
-    const id = context.params?.id;
+    const url = req.nextUrl;
+    const id = url.pathname.split('/').pop(); // gets the `[id]` part
 
     if (!id) {
       return NextResponse.json({ error: 'Missing news ID' }, { status: 400 });
