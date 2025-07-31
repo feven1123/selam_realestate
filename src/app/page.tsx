@@ -4,10 +4,7 @@ import Banner from '@/components/Banner';
 import Footer from '@/components/Footer';
 import How from '@/components/How';
 import Why from '@/components/Why';
-import Feature from '@/components/Feature';
 import Came from '@/components/Came';
-import Completed from '@/components/Completed';
-import Ongoing from '@/components/Ongoing';
 import Sister from '@/components/Sister';
 export default function Home() {
   return (
