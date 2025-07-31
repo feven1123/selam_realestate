@@ -6,12 +6,10 @@ export async function GET() {
     const totalProperties = await prisma.property.count();
     const ongoing = await prisma.property.count({ where: { status: "On Process" } });
     const completed = await prisma.property.count({ where: { status: "Completed" } });
-    const featured = await prisma.property.count({ where: { isFeatured: true } });
+    const featured = await prisma.property.count({ where: { status: "Featured" } });
 
-    const recentRequests = await prisma.request.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 5,
-    });
+
+
 
     return NextResponse.json({
       stats: [
@@ -20,7 +18,7 @@ export async function GET() {
         { title: 'Completed Projects', value: completed },
         { title: 'Featured Projects', value: featured },
       ],
-      recentRequests,
+
     });
   } catch (error) {
     console.error(error);

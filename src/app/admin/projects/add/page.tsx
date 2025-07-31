@@ -47,9 +47,14 @@ export default function AddProjectPage() {
 
       router.push('/admin/projects');
     } catch (error) {
-      alert(`Error adding project: ${error.message}`);
+      if (error instanceof Error) {
+        alert(`Error adding project: ${error.message}`);
+      } else {
+        alert('An unknown error occurred while adding the project.');
+      }
       console.error(error);
     }
+    
   };
 
   return (

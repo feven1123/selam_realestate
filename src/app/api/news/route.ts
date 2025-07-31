@@ -83,22 +83,3 @@ export async function DELETE(request: Request) {
   }
 }
 
-// To support GET /api/news/:id for fetching single news by id (used in edit page)
-export async function GET_ID(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const id = url.pathname.split('/').pop();
-    if (!id) return NextResponse.json({ error: 'Missing news ID' }, { status: 400 });
-
-    const news = await prisma.news.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!news) return NextResponse.json({ error: 'News not found' }, { status: 404 });
-
-    return NextResponse.json(news);
-  } catch (error) {
-    console.error('Error fetching news by id:', error);
-    return NextResponse.json({ error: 'Failed to fetch news' }, { status: 500 });
-  }
-}
