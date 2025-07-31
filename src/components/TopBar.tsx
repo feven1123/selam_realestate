@@ -6,7 +6,7 @@ export default function TopBar() {
       <div className="flex items-center space-x-1">
         <span>📞</span>
         <a href="tel:+251912345678" className="hover:underline">
-          +251 912 345 678
+          +251 953 947 848
         </a>
       </div>
       <div className="flex items-center space-x-1">
