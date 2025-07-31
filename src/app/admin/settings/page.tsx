@@ -44,6 +44,8 @@ export default function SettingsPage() {
         setConfirmNewPassword('');
       }
     } catch (error) {
+      console.error('Settings update error:', error); // Add this
+
       setMessage('Error updating settings.');
     }
   };
