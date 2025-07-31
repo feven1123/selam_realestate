@@ -36,6 +36,7 @@ export default function NewsDetailPage() {
   if (!article) {
     return (
       <>
+      <Topbar />
         <Header />
         <main className="pt-28 text-center">
           <h1 className="text-2xl text-gray-600">News article not found.</h1>
